@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seraya Stays – Hotel Reservation System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f2;--surf:#fff;--ink:#12302f;--mute:#5b7473;--line:#d5e1df;--brand:#0f4c4a;--brand-ink:#fff;--gold:#e3a008;--ok:#1f8a5b;--warn:#b7791f;--bad:#c0392b;--info:#2b6cb0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1b1b;--surf:#132726;--ink:#e6f1ef;--mute:#92aeab;--line:#25403e;--brand:#58c4bb;--brand-ink:#06201f;--gold:#f0b429;--ok:#4cc38a;--warn:#e0a84c;--bad:#ff7b6b;--info:#6aa9ec;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1b1b;--surf:#132726;--ink:#e6f1ef;--mute:#92aeab;--line:#25403e;--brand:#58c4bb;--brand-ink:#06201f;--gold:#f0b429;--ok:#4cc38a;--warn:#e0a84c;--bad:#ff7b6b;--info:#6aa9ec;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,sans-serif;margin:0;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:10px;padding:.6rem 1rem;font-weight:600;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.bad{background:var(--bad);color:#fff}.btn.sm{padding:.3rem .65rem;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+input,select,textarea{width:100%;background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:.55rem .75rem}
+label{display:block;font-size:13px;font-weight:600;color:var(--mute);margin-bottom:.25rem}
+.f{margin-bottom:.9rem}.row{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.err{color:var(--bad);font-size:13px;min-height:1.2em;margin:.2rem 0}
+/* auth */
+.auth{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.hero{background:var(--brand);color:var(--brand-ink);padding:3rem;display:flex;flex-direction:column;justify-content:space-between;gap:2rem}
+.hero h1{font-size:clamp(2.4rem,5vw,4.2rem);line-height:1;font-weight:800;max-width:11ch}
+.key{width:260px;aspect-ratio:1.6;border-radius:16px;background:var(--surf);color:var(--ink);padding:1rem 1.2rem;transform:rotate(-4deg);box-shadow:0 18px 40px #0004;display:flex;flex-direction:column;justify-content:space-between}
+.key b{font:800 2.2rem "Bricolage Grotesque",sans-serif;color:var(--brand)}
+.key i{height:10px;width:60%;border-radius:6px;background:var(--gold);display:block}
+.hero small{opacity:.85;font-size:13px}
+.authbox{padding:3rem;display:flex;align-items:center;justify-content:center}
+.authbox>div{width:100%;max-width:380px}
+.tabs{display:flex;gap:.4rem;margin:1rem 0}.tabs button{flex:1}
+.demo{margin-top:1rem;font-size:13px;color:var(--mute);border:1px dashed var(--line);border-radius:10px;padding:.7rem}
+.demo button{background:none;border:0;padding:0;color:var(--brand);text-decoration:underline;cursor:pointer}
+/* app */
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--surf);border-right:1px solid var(--line);padding:1.2rem .9rem;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:.3rem}
+.logo{font:800 1.4rem "Bricolage Grotesque",sans-serif;color:var(--brand);padding:0 .5rem 1rem}
+aside nav{display:flex;flex-direction:column;gap:.2rem;flex:1}
+.nb{background:none;border:0;text-align:left;padding:.6rem .8rem;border-radius:10px;cursor:pointer;color:var(--mute);font-weight:500;display:flex;justify-content:space-between}
+.nb.on{background:var(--brand);color:var(--brand-ink)}
+.nb .dot{background:var(--gold);color:#000;border-radius:99px;font-size:11px;padding:0 .45rem;font-weight:700}
+.me{font-size:13px;color:var(--mute);padding:.5rem}
+main{padding:1.6rem clamp(1rem,3vw,2.4rem);max-width:1100px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.top h2{font-size:1.8rem}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:1rem}
+.stat b{display:block;font:800 2rem "Bricolage Grotesque",sans-serif;color:var(--brand)}
+.stat span{color:var(--mute);font-size:13px}
+.tw{overflow-x:auto;background:var(--surf);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{text-align:left;padding:.65rem .8rem;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+th{color:var(--mute);font-weight:600;font-size:13px}tr:last-child td{border:0}
+.tag{display:inline-block;border-radius:99px;padding:.1rem .6rem;font-size:12px;font-weight:600;border:1px solid currentColor}
+.s-pending{color:var(--warn)}.s-confirmed{color:var(--info)}.s-checked-in{color:var(--ok)}.s-checked-out{color:var(--mute)}.s-cancelled{color:var(--bad)}
+.bar{display:grid;grid-template-columns:110px 1fr 70px;gap:.6rem;align-items:center;margin:.45rem 0;font-size:13px}
+.bar div i{display:block;height:12px;border-radius:6px;background:var(--brand)}
+.bar div{background:var(--line);border-radius:6px}
+.room h3{font-size:1.15rem}.price{font:800 1.3rem "Bricolage Grotesque",sans-serif;color:var(--brand)}
+.tools{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}.tools>*{flex:1;min-width:140px}
+.acts{display:flex;gap:.3rem;flex-wrap:wrap}
+.empty{text-align:center;color:var(--mute);padding:2rem}
+#modal{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:1rem;z-index:20}
+#modal.on{display:flex}#modal>div{background:var(--surf);border-radius:16px;padding:1.4rem;max-width:460px;width:100%;max-height:90vh;overflow:auto}
+#toast{position:fixed;bottom:calc(1rem + env(safe-area-inset-bottom,0px));right:1rem;display:flex;flex-direction:column;gap:.5rem;z-index:30}
+#toast div{background:var(--ink);color:var(--bg);padding:.7rem 1rem;border-radius:10px;box-shadow:0 6px 20px #0004}
+.note{display:flex;gap:.7rem;padding:.8rem 0;border-bottom:1px solid var(--line)}.note.un b{color:var(--brand)}
+@media(max-width:800px){
+.auth{grid-template-columns:1fr}.hero{padding:1.6rem}.key{display:none}.authbox{padding:1.6rem}
+.app{grid-template-columns:1fr;padding-bottom:64px}
+aside{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;flex-direction:row;padding:.3rem .3rem calc(.3rem + env(safe-area-inset-bottom,0px));z-index:10;border-top:1px solid var(--line);border-right:0;overflow-x:auto}
+aside nav{flex-direction:row;overflow-x:auto}.logo,.me{display:none}.nb{white-space:nowrap;padding:.5rem .7rem;gap:.4rem}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div><div id="modal"></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s);
+const mem={};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return mem[k]||null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}};
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const iso=d=>d.toISOString().slice(0,10);
+const addDays=(n)=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const today=()=>iso(new Date());
+const nights=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+const money=n=>"₹"+Number(n).toLocaleString("en-IN");
+const fd=d=>new Date(d+"T00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+const ACTIVE=["pending","confirmed","checked-in"];
+const TYPES=["Standard","Deluxe","Suite"];
+let DB,me=null,view="overview",ui={q:"",st:"all",bk:{in:addDays(1),out:addDays(3),g:2,t:"all"}};
+
+function seed(){
+ const u=[{id:"u1",name:"Asha Verma",email:"admin@seraya.in",pass:"admin123",role:"admin"},{id:"u2",name:"Rohit Desk",email:"desk@seraya.in",pass:"desk123",role:"staff"},{id:"u3",name:"Guest Demo",email:"guest@seraya.in",pass:"guest123",role:"guest"}];
+ const r=[];let n=101;
+ [["Standard",2,2800],["Standard",2,2800],["Standard",3,3200],["Deluxe",2,4500],["Deluxe",3,4900],["Deluxe",4,5400],["Suite",4,8200],["Suite",5,9800]].forEach((x,i)=>r.push({id:"r"+i,no:String(n+i),type:x[0],cap:x[1],price:x[2],status:"active"}));
+ const b=[
+  mk("u3","r3",addDays(-1),addDays(2),2,"checked-in"),
+  mk("u3","r6",addDays(10),addDays(13),3,"confirmed"),
+  mk("u3","r1",addDays(4),addDays(5),1,"pending")];
+ function mk(uid_,rid,i,o,g,s){const room=r.find(x=>x.id==rid);return{id:uid(),code:"SRY-"+Math.floor(1000+Math.random()*9000),userId:uid_,roomId:rid,in:i,out:o,guests:g,status:s,total:room.price*nights(i,o),notes:"",created:today()}}
+ return{users:u,rooms:r,bookings:b,notes:[]};
+}
+function load(){try{DB=JSON.parse(store.get("seraya")||"null")}catch(e){DB=null}if(!DB){DB=seed();save()}
+ try{const s=JSON.parse(store.get("seraya_me")||"null");if(s)me=DB.users.find(u=>u.id==s)||null}catch(e){}}
+function save(){store.set("seraya",JSON.stringify(DB))}
+const U=id=>DB.users.find(u=>u.id==id)||{name:"Deleted user"};
+const R=id=>DB.rooms.find(r=>r.id==id)||{no:"–",type:"–"};
+const isStaff=()=>me&&me.role!="guest";
+function notify(userId,text){DB.notes.unshift({id:uid(),userId,text,time:new Date().toISOString(),read:false});save()}
+function notifyStaff(text){DB.users.filter(u=>u.role!="guest").forEach(u=>notify(u.id,text))}
+function toast(t){const d=document.createElement("div");d.textContent=t;$("#toast").append(d);setTimeout(()=>d.remove(),3200)}
+function modal(h){$("#modal").innerHTML="<div>"+h+"</div>";$("#modal").classList.add("on")}
+function closeM(){$("#modal").classList.remove("on")}
+$("#modal").addEventListener("click",e=>{if(e.target.id=="modal")closeM()});
+document.addEventListener("keydown",e=>{if(e.key=="Escape")closeM()});
+
+/* availability */
+function free(roomId,a,b,ignore){return !DB.bookings.some(k=>k.roomId==roomId&&k.id!=ignore&&ACTIVE.includes(k.status)&&k.in<b&&k.out>a)}
+
+/* auth */
+let authMode="login";
+function authView(){
+ $("#root").innerHTML=`<div class="auth"><section class="hero"><div><b style="font:800 1.3rem 'Bricolage Grotesque'">Seraya Stays</b></div><div><h1>Every room, one clear record.</h1></div><div><div class="key"><small style="color:var(--mute)">Room key</small><b>204</b><i></i></div><p><small>Guests book. Reception confirms. Admins see the whole picture.</small></p></div></section>
+ <section class="authbox"><div><h2>${authMode=="login"?"Sign in":"Create your account"}</h2>
+ <div class="tabs"><button class="btn ${authMode=="login"?"":"alt"}" onclick="authMode='login';authView()">Sign in</button><button class="btn ${authMode=="reg"?"":"alt"}" onclick="authMode='reg';authView()">Register</button></div>
+ <form onsubmit="return doAuth(event)" novalidate>
+ ${authMode=="reg"?`<div class="f"><label for="an">Full name</label><input id="an" autocomplete="name"></div>`:""}
+ <div class="f"><label for="ae">Email</label><input id="ae" type="email" autocomplete="email"></div>
+ <div class="f"><label for="ap">Password</label><input id="ap" type="password" autocomplete="${authMode=="login"?"current-password":"new-password"}"></div>
+ <div class="err" id="aerr" role="alert"></div>
+ <button class="btn" style="width:100%">${authMode=="login"?"Sign in":"Create account"}</button></form>
+ <div class="demo">Demo accounts:<br><button onclick="fill('admin@seraya.in','admin123')">Admin</button> · <button onclick="fill('desk@seraya.in','desk123')">Reception</button> · <button onclick="fill('guest@seraya.in','guest123')">Guest</button></div></div></section></div>`}
+function fill(e,p){authMode="login";authView();$("#ae").value=e;$("#ap").value=p}
+function doAuth(ev){ev.preventDefault();const e=$("#ae").value.trim().toLowerCase(),p=$("#ap").value,er=$("#aerr");
+ if(!/^\S+@\S+\.\S+$/.test(e))return er.textContent="Enter a valid email address.",false;
+ if(authMode=="login"){const u=DB.users.find(u=>u.email==e&&u.pass==p);if(!u)return er.textContent="Email or password is incorrect.",false;me=u}
+ else{const n=$("#an").value.trim();if(n.length<2)return er.textContent="Enter your full name.",false;
+  if(p.length<6)return er.textContent="Password needs at least 6 characters.",false;
+  if(DB.users.some(u=>u.email==e))return er.textContent="That email already has an account. Sign in instead.",false;
+  me={id:uid(),name:n,email:e,pass:p,role:"guest"};DB.users.push(me);save()}
+ store.set("seraya_me",JSON.stringify(me.id));view="overview";render();toast("Welcome, "+me.name.split(" ")[0]);return false}
+function logout(){me=null;store.set("seraya_me","null");authView()}
+
+/* shell */
+function navItems(){const un=DB.notes.filter(n=>n.userId==me.id&&!n.read).length;
+ const g=[["overview","Overview"],["book","Book a room"],["bookings","My bookings"],["notes","Notifications",un]];
+ const s=[["overview","Dashboard"],["book","New booking"],["bookings","Bookings"],["rooms","Rooms"],["reports","Reports"],["notes","Notifications",un]];
+ if(me.role=="admin")s.splice(4,0,["users","Users"]);
+ return me.role=="guest"?g:s}
+function render(){if(!me)return authView();
+ const nav=navItems().map(([k,l,c])=>`<button class="nb ${view==k?"on":""}" onclick="view='${k}';render()">${l}${c?`<span class="dot">${c}</span>`:""}</button>`).join("");
+ $("#root").innerHTML=`<div class="app"><aside><div class="logo">Seraya Stays</div><nav>${nav}</nav><div class="me">${esc(me.name)}<br>${me.role=="staff"?"reception":me.role}</div><button class="btn alt sm" onclick="logout()">Sign out</button></aside><main id="main"></main></div>`;
+ ({overview,book,bookings,rooms,reports,users,notes})[view]();}
+
+/* views */
+const stat=(n,l)=>`<div class="card stat"><b>${n}</b><span>${l}</span></div>`;
+const tag=s=>`<span class="tag s-${s}">${s.replace("-"," ")}</span>`;
+function overview(){
+ const mine=isStaff()?DB.bookings:DB.bookings.filter(b=>b.userId==me.id);
+ const t=today();let h;
+ if(isStaff()){const inH=DB.bookings.filter(b=>b.status=="checked-in").length,act=DB.rooms.filter(r=>r.status=="active").length;
+  h=`<div class="grid">${stat(DB.bookings.filter(b=>b.status=="pending").length,"awaiting confirmation")}${stat(DB.bookings.filter(b=>b.in==t&&["confirmed","pending"].includes(b.status)).length,"arrivals today")}${stat(DB.bookings.filter(b=>b.out==t&&b.status=="checked-in").length,"departures today")}${stat(Math.round(inH/Math.max(act,1)*100)+"%","occupied now")}</div>
+  <h3 style="margin:1.4rem 0 .6rem">Needs attention</h3>${table(DB.bookings.filter(b=>b.status=="pending"||(b.status=="confirmed"&&b.in<=t)).slice(0,6))}`}
+ else{const up=mine.filter(b=>ACTIVE.includes(b.status)&&b.out>=t).sort((a,b)=>a.in<b.in?-1:1);
+  h=`<div class="grid">${stat(up.length,"upcoming stays")}${stat(mine.filter(b=>b.status=="checked-out").length,"past stays")}${stat(money(mine.filter(b=>b.status!="cancelled").reduce((s,b)=>s+b.total,0)),"total booked")}</div>
+  <h3 style="margin:1.4rem 0 .6rem">Your next stays</h3>${table(up.slice(0,5))}`}
+ $("#main").innerHTML=`<div class="top"><h2>${isStaff()?"Dashboard":"Hello, "+esc(me.name.split(" ")[0])}</h2><button class="btn" onclick="view='book';render()">${isStaff()?"New booking":"Book a room"}</button></div>`+h}
+function table(list){
+ if(!list.length)return `<div class="card empty">No bookings here yet. Start with a new booking.</div>`;
+ return `<div class="tw"><table><thead><tr><th>Code</th>${isStaff()?"<th>Guest</th>":""}<th>Room</th><th>Stay</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody>${list.map(b=>`<tr><td><b>${b.code}</b></td>${isStaff()?`<td>${esc(U(b.userId).name)}</td>`:""}<td>${R(b.roomId).no} · ${R(b.roomId).type}</td><td>${fd(b.in)} – ${fd(b.out)} (${nights(b.in,b.out)}n)</td><td>${money(b.total)}</td><td>${tag(b.status)}</td><td><div class="acts">${actions(b)}</div></td></tr>`).join("")}</tbody></table></div>`}
+function actions(b){const bt=(s,l,c="")=>`<button class="btn sm ${c}" onclick="setStatus('${b.id}','${s}')">${l}</button>`;let a="";
+ if(isStaff()){if(b.status=="pending")a+=bt("confirmed","Confirm");if(b.status=="confirmed")a+=bt("checked-in","Check in");if(b.status=="checked-in")a+=bt("checked-out","Check out")}
+ if(["pending","confirmed"].includes(b.status))a+=bt("cancelled","Cancel","alt");
+ if(me.role=="admin")a+=`<button class="btn sm alt" onclick="delB('${b.id}')">Delete</button>`;return a}
+function setStatus(id,s){const b=DB.bookings.find(x=>x.id==id);
+ if(s=="cancelled"&&!confirm("Cancel booking "+b.code+"?"))return;
+ b.status=s;save();
+ const msg={confirmed:"is confirmed",["checked-in"]:"is checked in",["checked-out"]:"is checked out. Thank you for staying",cancelled:"was cancelled"}[s];
+ if(b.userId!=me.id)notify(b.userId,`Booking ${b.code} ${msg}.`);else if(s=="cancelled")notifyStaff(`${me.name} cancelled booking ${b.code}.`);
+ toast(`${b.code}: ${s.replace("-"," ")}`);render()}
+function delB(id){if(confirm("Delete this booking permanently?")){DB.bookings=DB.bookings.filter(b=>b.id!=id);save();toast("Booking deleted");render()}}
+
+function bookings(){
+ let l=isStaff()?DB.bookings:DB.bookings.filter(b=>b.userId==me.id);
+ const q=ui.q.toLowerCase();
+ l=l.filter(b=>(ui.st=="all"||b.status==ui.st)&&(!q||(b.code+U(b.userId).name+R(b.roomId).no).toLowerCase().includes(q))).sort((a,b)=>a.created<b.created?1:-1);
+ $("#main").innerHTML=`<div class="top"><h2>${isStaff()?"Bookings":"My bookings"}</h2><button class="btn" onclick="view='book';render()">New booking</button></div>
+ <div class="tools"><input id="q" placeholder="Search code, guest or room" value="${esc(ui.q)}" aria-label="Search" oninput="ui.q=this.value;keep()"><select aria-label="Status" onchange="ui.st=this.value;bookings()">${["all","pending","confirmed","checked-in","checked-out","cancelled"].map(s=>`<option ${ui.st==s?"selected":""} value="${s}">${s=="all"?"All statuses":s.replace("-"," ")}</option>`).join("")}</select></div><div id="tbl">${table(l)}</div>`}
+function keep(){const p=$("#q").selectionStart;bookings();const q=$("#q");q.focus();q.setSelectionRange(p,p)}
+
+function book(){const f=ui.bk;
+ $("#main").innerHTML=`<div class="top"><h2>${isStaff()?"New booking":"Book a room"}</h2></div>
+ <div class="card" style="margin-bottom:1rem"><div class="row">
+ <div><label for="bi">Check-in</label><input id="bi" type="date" min="${today()}" value="${f.in}"></div>
+ <div><label for="bo">Check-out</label><input id="bo" type="date" min="${today()}" value="${f.out}"></div>
+ <div><label for="bg">Guests</label><input id="bg" type="number" min="1" max="6" value="${f.g}"></div>
+ <div><label for="bt">Room type</label><select id="bt"><option value="all">Any</option>${TYPES.map(t=>`<option ${f.t==t?"selected":""}>${t}</option>`).join("")}</select></div></div>
+ <div class="err" id="berr" role="alert"></div><button class="btn" onclick="searchRooms()">Check availability</button></div><div id="res"></div>`;searchRooms(true)}
+function searchRooms(quiet){const f=ui.bk;f.in=$("#bi").value;f.out=$("#bo").value;f.g=+$("#bg").value;f.t=$("#bt").value;const er=$("#berr");er.textContent="";
+ if(!f.in||!f.out)return er.textContent="Pick both dates.";
+ if(f.in<today())return er.textContent="Check-in cannot be in the past.";
+ if(f.out<=f.in)return er.textContent="Check-out must be after check-in.";
+ if(!(f.g>=1))return er.textContent="Enter at least 1 guest.";
+ const n=nights(f.in,f.out);
+ const l=DB.rooms.filter(r=>r.status=="active"&&r.cap>=f.g&&(f.t=="all"||r.type==f.t)&&free(r.id,f.in,f.out));
+ $("#res").innerHTML=l.length?`<div class="grid">${l.map(r=>`<div class="card room"><h3>Room ${r.no}</h3><div style="color:var(--mute)">${r.type} · up to ${r.cap} guests</div><div class="price" style="margin:.6rem 0 0">${money(r.price)}<small style="font:400 13px Figtree;color:var(--mute)"> /night</small></div><div style="margin-bottom:.8rem;color:var(--mute);font-size:13px">${n} night${n>1?"s":""} = ${money(r.price*n)}</div><button class="btn" onclick="reserve('${r.id}')">Reserve</button></div>`).join("")}</div>`:`<div class="card empty">No rooms are free for those dates. Try different dates or fewer guests.</div>`}
+function reserve(rid){const r=R(rid),f=ui.bk,n=nights(f.in,f.out);
+ const guests=DB.users.filter(u=>u.role=="guest");
+ modal(`<h3>Confirm your reservation</h3><p>Room ${r.no} (${r.type}) · ${fd(f.in)} – ${fd(f.out)} · ${f.g} guest${f.g>1?"s":""}<br><b>${money(r.price*n)}</b> total</p>
+ ${isStaff()?`<div class="f"><label for="gu">Guest</label><select id="gu">${guests.map(g=>`<option value="${g.id}">${esc(g.name)} (${esc(g.email)})</option>`).join("")}</select></div>`:""}
+ <div class="f"><label for="nt">Special requests (optional)</label><textarea id="nt" rows="2" maxlength="200"></textarea></div>
+ <div class="acts"><button class="btn" onclick="createB('${rid}')">Confirm reservation</button><button class="btn alt" onclick="closeM()">Back</button></div>`)}
+function createB(rid){const f=ui.bk,r=R(rid);
+ if(!free(rid,f.in,f.out))return toast("That room was just taken. Search again."),closeM(),searchRooms();
+ const uidG=isStaff()?($("#gu")?.value):me.id;if(!uidG)return toast("Add a guest account first.");
+ const b={id:uid(),code:"SRY-"+Math.floor(1000+Math.random()*9000),userId:uidG,roomId:rid,in:f.in,out:f.out,guests:f.g,status:isStaff()?"confirmed":"pending",total:r.price*nights(f.in,f.out),notes:$("#nt").value.trim(),created:today()};
+ DB.bookings.push(b);save();
+ notify(uidG,`Booking ${b.code} for room ${r.no} is ${b.status}.`);
+ if(!isStaff())notifyStaff(`New booking ${b.code} from ${me.name} awaits confirmation.`);
+ modal(`<h3>Booking ${b.status=="pending"?"received":"confirmed"}</h3><p>Your confirmation code is</p><div class="price" style="font-size:2rem">${b.code}</div><p style="color:var(--mute)">${b.status=="pending"?"Reception will confirm shortly. You will get a notification.":"The guest has been notified."}</p><button class="btn" onclick="closeM();view='bookings';render()">View bookings</button>`)}
+
+function rooms(){const adm=me.role=="admin";
+ $("#main").innerHTML=`<div class="top"><h2>Rooms</h2>${adm?`<button class="btn" onclick="roomForm()">Add room</button>`:""}</div><div class="tw"><table><thead><tr><th>Room</th><th>Type</th><th>Sleeps</th><th>Rate</th><th>Status</th>${adm?"<th>Actions</th>":""}</tr></thead><tbody>${DB.rooms.map(r=>`<tr><td><b>${esc(r.no)}</b></td><td>${r.type}</td><td>${r.cap}</td><td>${money(r.price)}</td><td><span class="tag ${r.status=="active"?"s-checked-in":"s-pending"}">${r.status}</span></td>${adm?`<td><div class="acts"><button class="btn sm alt" onclick="roomForm('${r.id}')">Edit</button><button class="btn sm alt" onclick="delRoom('${r.id}')">Delete</button></div></td>`:""}</tr>`).join("")}</tbody></table></div>`}
+function roomForm(id){const r=DB.rooms.find(x=>x.id==id)||{no:"",type:"Standard",cap:2,price:3000,status:"active"};
+ modal(`<h3>${id?"Edit room":"Add room"}</h3><form onsubmit="return saveRoom(event,'${id||""}')"><div class="row"><div class="f"><label for="rn">Room number</label><input id="rn" value="${esc(r.no)}"></div><div class="f"><label for="rt">Type</label><select id="rt">${TYPES.map(t=>`<option ${r.type==t?"selected":""}>${t}</option>`).join("")}</select></div><div class="f"><label for="rc">Sleeps</label><input id="rc" type="number" min="1" max="8" value="${r.cap}"></div><div class="f"><label for="rp">Rate per night (₹)</label><input id="rp" type="number" min="500" value="${r.price}"></div></div><div class="f"><label for="rs">Status</label><select id="rs"><option ${r.status=="active"?"selected":""}>active</option><option ${r.status!="active"?"selected":""} value="maintenance">maintenance</option></select></div><div class="err" id="rerr"></div><div class="acts"><button class="btn">Save room</button><button type="button" class="btn alt" onclick="closeM()">Cancel</button></div></form>`)}
+function saveRoom(e,id){e.preventDefault();const no=$("#rn").value.trim(),cap=+$("#rc").value,price=+$("#rp").value,er=$("#rerr");
+ if(!no)return er.textContent="Enter a room number.",false;
+ if(DB.rooms.some(r=>r.no==no&&r.id!=id))return er.textContent="That room number already exists.",false;
+ if(!(cap>=1)||!(price>=500))return er.textContent="Sleeps must be 1+ and rate at least ₹500.",false;
+ const d={no,type:$("#rt").value,cap,price,status:$("#rs").value};
+ if(id)Object.assign(DB.rooms.find(r=>r.id==id),d);else DB.rooms.push({id:uid(),...d});
+ save();closeM();toast("Room saved");render();return false}
+function delRoom(id){if(DB.bookings.some(b=>b.roomId==id&&ACTIVE.includes(b.status)))return toast("Room has active bookings. Cancel them first.");
+ if(confirm("Delete this room?")){DB.rooms=DB.rooms.filter(r=>r.id!=id);save();toast("Room deleted");render()}}
+
+function users(){$("#main").innerHTML=`<div class="top"><h2>Users</h2></div><div class="tw"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead><tbody>${DB.users.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td><select aria-label="Role" ${u.id==me.id?"disabled":""} onchange="setRole('${u.id}',this.value)">${["guest","staff","admin"].map(r=>`<option ${u.role==r?"selected":""} value="${r}">${r=="staff"?"reception":r}</option>`).join("")}</select></td><td>${u.id==me.id?"":`<button class="btn sm alt" onclick="delUser('${u.id}')">Delete</button>`}</td></tr>`).join("")}</tbody></table></div>`}
+function setRole(id,r){DB.users.find(u=>u.id==id).role=r;save();notify(id,"Your role is now "+r+".");toast("Role updated")}
+function delUser(id){if(DB.bookings.some(b=>b.userId==id&&ACTIVE.includes(b.status)))return toast("This user has active bookings.");
+ if(confirm("Delete this user?")){DB.users=DB.users.filter(u=>u.id!=id);save();toast("User deleted");users()}}
+
+function reports(){
+ const live=DB.bookings.filter(b=>b.status!="cancelled"),rev=live.reduce((s,b)=>s+b.total,0);
+ const bySt=["pending","confirmed","checked-in","checked-out","cancelled"].map(s=>[s,DB.bookings.filter(b=>b.status==s).length]);
+ const byTy=TYPES.map(t=>[t,live.filter(b=>R(b.roomId).type==t).reduce((s,b)=>s+b.total,0)]);
+ const bars=(a,f=x=>x)=>{const m=Math.max(...a.map(x=>x[1]),1);return a.map(([k,v])=>`<div class="bar"><span>${k.replace("-"," ")}</span><div><i style="width:${v/m*100}%"></i></div><b>${f(v)}</b></div>`).join("")};
+ const avg=live.length?Math.round(live.reduce((s,b)=>s+nights(b.in,b.out),0)/live.length*10)/10:0;
+ $("#main").innerHTML=`<div class="top"><h2>Reports</h2><button class="btn alt" onclick="csv()">Export bookings CSV</button></div><div class="grid">${stat(money(rev),"booked revenue")}${stat(DB.bookings.length,"total bookings")}${stat(avg,"avg nights per stay")}${stat(DB.bookings.length?Math.round(DB.bookings.filter(b=>b.status=="cancelled").length/DB.bookings.length*100)+"%":"0%","cancellation rate")}</div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:1rem"><div class="card"><h3>Bookings by status</h3>${bars(bySt)}</div><div class="card"><h3>Revenue by room type</h3>${bars(byTy,money)}</div></div>`}
+function csv(){const rows=[["Code","Guest","Room","Check-in","Check-out","Total","Status"],...DB.bookings.map(b=>[b.code,U(b.userId).name,R(b.roomId).no,b.in,b.out,b.total,b.status])];
+ const t=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/csv"}));a.download="bookings.csv";a.click()}
+
+function notes(){const l=DB.notes.filter(n=>n.userId==me.id);
+ $("#main").innerHTML=`<div class="top"><h2>Notifications</h2><button class="btn alt" onclick="readAll()">Mark all read</button></div><div class="card">${l.length?l.map(n=>`<div class="note ${n.read?"":"un"}"><div><b>${esc(n.text)}</b><div style="color:var(--mute);font-size:12px">${new Date(n.time).toLocaleString("en-IN")}</div></div></div>`).join(""):`<div class="empty">Nothing yet. Booking updates will appear here.</div>`}</div>`}
+function readAll(){DB.notes.forEach(n=>{if(n.userId==me.id)n.read=true});save();render()}
+
+load();render();
+</script>
+</body>
+</html>
